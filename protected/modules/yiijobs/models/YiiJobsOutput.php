@@ -4,10 +4,10 @@
  * This is the model class for table "YiiJobsOutput".
  *
  * The followings are the available columns in table 'YiiJobsOutput':
- * @property integer $YiiJobsOutput_id
+ * @property integer $yiiJobsOutput_id
  * @property integer $is_error
  * @property string $output
- * @property integer $YiiJobs_id
+ * @property integer $yiiJobs_id
  * @property string $start_time
  * @property string $end_time
  */
@@ -18,7 +18,7 @@ class YiiJobsOutput extends CActiveRecord
      */
     public function tableName()
     {
-        return 'YiiJobsOutput';
+        return 'yiiJobsOutput';
     }
 
     /**
@@ -33,7 +33,7 @@ class YiiJobsOutput extends CActiveRecord
             array('output, start_time, end_time', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('YiiJobsOutput_id, is_error, output, YiiJobs_id, start_time, end_time', 'safe', 'on'=>'search'),
+            array('yiiJobsOutput_id, is_error, output, yiiJobs_id, start_time, end_time', 'safe', 'on'=>'search'),
         );
     }
 
@@ -54,10 +54,10 @@ class YiiJobsOutput extends CActiveRecord
     public function attributeLabels()
     {
         return array(
-            'YiiJobsOutput_id' => 'Yii Jobs Output',
+            'yiiJobsOutput_id' => 'Yii Jobs Output',
             'is_error' => 'Is Error',
             'output' => 'Output',
-            'YiiJobs_id' => 'Yii Jobs',
+            'yiiJobs_id' => 'Yii Jobs',
             'start_time' => 'Start Time',
             'end_time' => 'End Time',
         );
@@ -81,10 +81,10 @@ class YiiJobsOutput extends CActiveRecord
 
         $criteria=new CDbCriteria;
 
-        $criteria->compare('YiiJobsOutput_id',$this->YiiJobsOutput_id);
+        $criteria->compare('yiiJobsOutput_id',$this->yiiJobsOutput_id);
         $criteria->compare('is_error',$this->is_error);
         $criteria->compare('output',$this->output,true);
-        $criteria->compare('YiiJobs_id',$this->YiiJobs_id);
+        $criteria->compare('yiiJobs_id',$this->yiiJobs_id);
         $criteria->compare('start_time',$this->start_time,true);
         $criteria->compare('end_time',$this->end_time,true);
 
