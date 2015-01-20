@@ -15,7 +15,6 @@
 class YiiJobs extends BaseYiiJobs
 {
 	private $_yiijobCommand;
-
 	/**
 	 * @return array relational rules.
 	 */
@@ -24,7 +23,7 @@ class YiiJobs extends BaseYiiJobs
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-				'outputs'=>array(self::HAS_MANY, 'YiiJobsOutput', 'yiiJobs_id'),
+				'outputs'=>array(self::HAS_MANY, 'YiiJobsOutput', 'YiiJobs_id'),
 		);
 	}
 	
@@ -41,8 +40,13 @@ class YiiJobs extends BaseYiiJobs
 	
 	public function beforeSave()
 	{
-		if ($this->getIsNewRecord())
+		if ($this->isNewRecord)
+		{
 			$this->dc = new CDbExpression('NOW()');
+			$this->last_completed = new CDbExpression('NULL');
+			$this->last_ran = new CDbExpression('NULL');
+		}
+		
 		return true;
 	}
 	
@@ -69,5 +73,12 @@ class YiiJobs extends BaseYiiJobs
 	{
 		$args = array('yiic', $this->name, $this->command_args);
 		return $this->_yiijobCommand->run($args);
+	}
+	
+	public function setIsRunning()
+	{
+		return Yii::app()->db()->createCommand()->update('YiiJobs', array('is_running' => 1),
+				'yiiJobs_id=:id',
+				array(':id'=>$this->yiiJobs_id));
 	}
 }

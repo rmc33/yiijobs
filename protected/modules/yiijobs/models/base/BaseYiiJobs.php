@@ -11,6 +11,8 @@
  * @property string $last_ran
  * @property string $dc
  * @property string $command_args
+ * @property string $description
+ * @property string $last_completed
  */
 class BaseYiiJobs extends CActiveRecord
 {
@@ -33,10 +35,10 @@ class BaseYiiJobs extends CActiveRecord
 			array('name, command_classname', 'length', 'max'=>100),
 			array('active_flag, last_ran', 'length', 'max'=>45),
 			array('command_args', 'length', 'max'=>145),
-			array('dc', 'safe'),
+			array('description', 'length', 'max'=>245),
+			array('dc, last_completed', 'safe'),
 			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('yiiJobs_id, name, command_classname, active_flag, last_ran, dc, command_args', 'safe', 'on'=>'search'),
+			array('name, command_classname, active_flag, last_ran, dc, command_args, description, last_completed', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,6 +66,8 @@ class BaseYiiJobs extends CActiveRecord
 			'last_ran' => 'Last Ran',
 			'dc' => 'Dc',
 			'command_args' => 'Command Args',
+			'description' => 'Description',
+			'last_completed' => 'Last Completed',
 		);
 	}
 
@@ -92,6 +96,8 @@ class BaseYiiJobs extends CActiveRecord
 		$criteria->compare('last_ran',$this->last_ran,true);
 		$criteria->compare('dc',$this->dc,true);
 		$criteria->compare('command_args',$this->command_args,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('last_completed',$this->last_completed,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

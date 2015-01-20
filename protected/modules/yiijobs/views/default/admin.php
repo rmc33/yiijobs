@@ -47,12 +47,15 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'columns'=>array(
 		'yiiJobs_id',
 		'name',
+		'description',
 		'command_classname',
-		'active_flag',
-		'last_ran',
-		'dc',
-		/*
 		'command_args',
+		'active_flag',
+		/*
+		'is_running',
+		'dc',
+		'last_ran',
+		'last_completed',
 		*/
 		array(
 			'class'=>'CButtonColumn',

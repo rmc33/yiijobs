@@ -22,18 +22,28 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'description'); ?>
+		<?php echo $form->textField($model,'description',array('size'=>60,'maxlength'=>245)); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'command_classname'); ?>
 		<?php echo $form->textField($model,'command_classname',array('size'=>60,'maxlength'=>100)); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'active_flag'); ?>
-		<?php echo $form->textField($model,'active_flag',array('size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->label($model,'command_args'); ?>
+		<?php echo $form->textField($model,'command_args',array('size'=>60,'maxlength'=>145)); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'last_ran'); ?>
-		<?php echo $form->textField($model,'last_ran',array('size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->label($model,'active_flag'); ?>
+		<?php echo $form->textField($model,'active_flag'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'is_running'); ?>
+		<?php echo $form->textField($model,'is_running'); ?>
 	</div>
 
 	<div class="row">
@@ -42,8 +52,13 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'command_args'); ?>
-		<?php echo $form->textField($model,'command_args',array('size'=>60,'maxlength'=>145)); ?>
+		<?php echo $form->label($model,'last_ran'); ?>
+		<?php echo $form->textField($model,'last_ran'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'last_completed'); ?>
+		<?php echo $form->textField($model,'last_completed'); ?>
 	</div>
 
 	<div class="row buttons">
