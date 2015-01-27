@@ -14,30 +14,29 @@ class YiiJobsRunnerCommand extends CConsoleCommand
 				//set is_running and check again if job was not already started by another process
 				if ($job->setIsRunning())
 				{
-					$job->last_ran = date('Y-m-d H:i:s');
-					$start_time = time();
+					$last_ran = date('Y-m-d H:i:s');
 					ob_start();
 					$jobSuccess = $job->run();
-					$job->last_completed = date('Y-m-d H:i:s');
-					$end_time = time();
-					$output = ob_get_contents();
+					$jobOutput = ob_get_contents();
 					ob_end_clean();
-					
+					$job->last_ran = $last_ran;
+					$job->last_completed = date('Y-m-d H:i:s');
 					//save YiiJobsOutput record
-					if ($output)
+					if ($jobOutput)
 					{
 						$logOutput = new YiiJobsOutput();
 						$logOutput->yiiJobs_id = $job->yiiJobs_id;
-						$logOutput->is_error = !$jobSuccess;
-						$logOutput->output = $output;
-						$logOutput->start_time = $start_time;
-						$logOutput->end_time = $end_time;
+						$logOutput->is_error = $jobSuccess ? 0 : 1;
+						$logOutput->output = $jobOutput;
+						$logOutput->start_time = $job->last_ran;
+						$logOutput->end_time = $job->last_completed;
 						$logOutput->save();
 					}
-					if ($job->deleteAfterRunning())
+					if ($job->deleteJobAfterRunning())
 					{
 						$job->active_flag = 0;
 					}
+					$job->is_running = 0;
 					$job->save();
 				}
 			}
