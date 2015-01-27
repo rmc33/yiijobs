@@ -5,21 +5,25 @@ class JobTestCommand extends CConsoleCommand implements YiiJobsConsoleCommand
 	public function run($args)
 	{
 		echo "\nhello we started!";
-		return true;
+		return 1;
 	}
 	
-	public function shouldJobRun($current_timestamp)
+	//run once a day
+	public function shouldJobRun($current_timestamp, $job)
 	{
-		$day = date('D', $current_timestamp);
-		echo "\nday=".$day;
-		if ($day == 'Sat')
+		$lastRan = new DateTime($job->last_ran);
+		if (!lastRan) return true;
+		
+		$lastRan = $lastRan->format("Y-m-d");
+		if ($lastRan != date('Y-m-d'))
 		{
 			return true;
 		}
 		return false;
 	}
 	
-	public function deleteCommandAfterRunning()
+	//keep running
+	public function deleteJobAfterRunning()
 	{
 		return false;
 	}

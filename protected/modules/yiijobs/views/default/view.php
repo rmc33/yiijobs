@@ -33,3 +33,7 @@ $this->menu=array(
 		'last_completed',
 	),
 )); ?>
+
+<b>View Output:</b>
+<a href="<?php echo "viewOutput?YiiJobsOutput%5ByiiJobsOutput_id%5D=&YiiJobsOutput%5ByiiJobs_id%5D={$model->yiiJobs_id}&YiiJobsOutput%5Bis_error%5D=&YiiJobsOutput%5Boutput%5D=&YiiJobsOutput%5Bstart_time%5D=&YiiJobsOutput%5Bend_time%5D=&YiiJobsOutput_page=1&ajax=yii-jobs-grid&id=3";?>">output logs</a>
+<br />

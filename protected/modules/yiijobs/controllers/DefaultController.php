@@ -39,7 +39,7 @@ class DefaultController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','viewOutput'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -163,6 +163,17 @@ class DefaultController extends Controller
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
+	}
+	
+	public function actionViewOutput()
+	{
+		$model=new YiiJobsOutput('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['YiiJobsOutput']))
+			$model->attributes=$_GET['YiiJobsOutput'];
+		$this->render('adminYiiJobsOutput',array(
+				'model'=>$model,
+		));
 	}
 
 	/**
