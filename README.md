@@ -1,5 +1,7 @@
 # yiijobs
 
-Jobs module to manage scheduled jobs
+Yii module to manage scheduled jobs.
 
-Create just one cronjob entry for JobRunnerCommand which will query YiiJobs table and run corresponding command file with selected arguments if command should run at the current time.
+Create just one cronjob entry for YiiJobsRunnerCommand to run every 2 min for example with */2 * * * * /usr/bin/php /project/yiic yiijobsrunner
+
+YiiJobsRunnerCommand will query and loop through active YiiJobs records that are not already currently running. YiiJobsRunnerCommand will run the command file and arguments associed with the YiiJob record if the command should run at the current time.
