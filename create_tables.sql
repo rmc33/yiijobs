@@ -19,5 +19,7 @@ CREATE TABLE `yiiJobsOutput` (
   `yiiJobs_id` int(11) DEFAULT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`yiiJobsOutput_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`yiiJobsOutput_id`),
+  KEY `fk_yiiJobsOutput_yiiJobs_id_idx` (`yiiJobs_id`),
+  CONSTRAINT `fk_yiiJobsOutput_yiiJobs_id` FOREIGN KEY (`yiiJobs_id`) REFERENCES `yiiJobs` (`yiiJobs_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
