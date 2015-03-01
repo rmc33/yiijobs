@@ -54,11 +54,14 @@ class YiiJobs extends BaseYiiJobs
 	{
 		if ($this->command_classname and $this->_yiijobCommand == null)
 		{
+			if (!class_exists($this->command_classname))
+			{
+				Yii::log('class not found for job id '.$this->yiiJobs_id, 'error', __CLASS__);
+				return false;
+			}
 			$commandPath = Yii::app()->getBasePath() . DIRECTORY_SEPARATOR . 'commands';
-			$runner = new CConsoleCommandRunner();
-			$runner->addCommands($commandPath);
-			$commandPath = Yii::getFrameworkPath() . DIRECTORY_SEPARATOR . 'cli' . DIRECTORY_SEPARATOR . 'commands';
-			$runner->addCommands($commandPath);
+    		$runner = new CConsoleCommandRunner();
+    		$runner->addCommands($commandPath);
 			$this->_yiijobCommand = new $this->command_classname($this->name,$runner);
 		}
 	}
@@ -66,19 +69,40 @@ class YiiJobs extends BaseYiiJobs
 	public function shouldJobRun()
 	{
 		$this->createJobCommandInstance();
-		return $this->_yiijobCommand->shouldJobRun(time());
+		return $this->_yiijobCommand->shouldJobRun(time(),$this);
+	}
+	
+	public function deleteJobAfterRunning()
+	{
+		return $this->_yiijobCommand->deleteJobAfterRunning();
 	}
 	
 	public function run()
 	{
-		$args = array('yiic', $this->name, $this->command_args);
-		return $this->_yiijobCommand->run($args);
+		$args = array($this->command_args);
+		return $this->_yiijobCommand->run($args) ? 1 : 0;
 	}
 	
 	public function setIsRunning()
 	{
-		return Yii::app()->db()->createCommand()->update('YiiJobs', array('is_running' => 1),
+		$last_ran = date('Y-m-d H:i:s');
+		return db()->createCommand()->update('yiiJobs', array('is_running' => 1, 'last_ran' => $last_ran),
 				'yiiJobs_id=:id',
 				array(':id'=>$this->yiiJobs_id));
+	}
+	
+	public function getApplicationIds()
+	{
+		return array('1' => 'main site', '2' => 'inp', '3' => 'api', '4' => 'admin');
+	}
+	
+	public function getApplicationNameForId($id)
+	{
+		$ids = $this->getApplicationIds();
+		if (isset($ids[$id]))
+		{
+			return $ids[$id];
+		}
+		return '';
 	}
 }
