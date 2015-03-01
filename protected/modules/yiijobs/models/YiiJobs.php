@@ -45,6 +45,7 @@ class YiiJobs extends BaseYiiJobs
 			$this->dc = new CDbExpression('NOW()');
 			$this->last_completed = new CDbExpression('NULL');
 			$this->last_ran = new CDbExpression('NULL');
+			$this->is_running = 0;
 		}
 		
 		return true;
@@ -79,8 +80,19 @@ class YiiJobs extends BaseYiiJobs
 	
 	public function run()
 	{
-		$args = array($this->command_args);
-		return $this->_yiijobCommand->run($args) ? 1 : 0;
+		if (preg_match("/^(.*)\s--/", $this->command_args, $matches))
+		{
+			$options = array();
+			if ($optionsMatches = explode('--', $this->command_args))
+			{
+				foreach($optionsMatches as $m)
+				{
+					$options[] = count($options) ? '--'.trim($m) : trim($m);
+				}
+			}
+			return $this->_yiijobCommand->run($options);
+		}
+		return $this->_yiijobCommand->run(array($this->command_args));
 	}
 	
 	public function setIsRunning()
