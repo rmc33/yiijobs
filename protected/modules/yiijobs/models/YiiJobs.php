@@ -80,18 +80,17 @@ class YiiJobs extends BaseYiiJobs
 	
 	public function run()
 	{
-		if (preg_match("/^(.*)\s--/", $this->command_args, $matches))
+		if (($optionsMatches = explode('--', $this->command_args)) and count($optionsMatches) > 1)
 		{
+			//run with --x=y options
 			$options = array();
-			if ($optionsMatches = explode('--', $this->command_args))
+			foreach($optionsMatches as $m)
 			{
-				foreach($optionsMatches as $m)
-				{
-					$options[] = count($options) ? '--'.trim($m) : trim($m);
-				}
+				$options[] = count($options) ? '--'.trim($m) : trim($m);
 			}
 			return $this->_yiijobCommand->run($options);
 		}
+		//run without options
 		return $this->_yiijobCommand->run(array($this->command_args));
 	}
 	
@@ -116,5 +115,32 @@ class YiiJobs extends BaseYiiJobs
 			return $ids[$id];
 		}
 		return '';
+	}
+	
+	public function runCaptureYiiOutputLog()
+	{
+		$this->last_ran = date('Y-m-d H:i:s');
+		ob_start();
+		$statusCode = $this->run();
+		$this->last_completed = date('Y-m-d H:i:s');
+		$output = ob_get_contents();
+		ob_end_clean();
+		//save YiiJobsOutput record
+		if ($output)
+		{
+			$logOutput = new YiiJobsOutput();
+			$logOutput->yiiJobs_id = $this->yiiJobs_id;
+			$logOutput->is_error = $statusCode ? 1 : 0;
+			$logOutput->output = $output;
+			$logOutput->start_time = $this->last_ran;
+			$logOutput->end_time = $this->last_completed;
+			$logOutput->save();
+		}
+		if ($this->deleteJobAfterRunning())
+		{
+			$this->active_flag = 0;
+		}
+		$this->save();
+		return $statusCode;
 	}
 }

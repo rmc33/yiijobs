@@ -39,7 +39,7 @@ class DefaultController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','viewOutput'),
+				'actions'=>array('create','update','test'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -77,6 +77,8 @@ class DefaultController extends Controller
 		if(isset($_POST['YiiJobs']))
 		{
 			$model->attributes=$_POST['YiiJobs'];
+			if (isset($_POST['test']))
+				$this->redirect(array('test','id'=>$model->yiiJobs_id));
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->yiiJobs_id));
 		}
@@ -101,6 +103,8 @@ class DefaultController extends Controller
 		if(isset($_POST['YiiJobs']))
 		{
 			$model->attributes=$_POST['YiiJobs'];
+			if (isset($_POST['test']))
+				$this->redirect(array('test','id'=>$model->yiiJobs_id));
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->yiiJobs_id));
 		}
@@ -149,6 +153,20 @@ class DefaultController extends Controller
 			'model'=>$model,
 		));
 	}
+	
+	public function actionTest($id)
+	{
+		$model=YiiJobs::model()->findByPk($id);
+		$model->createJobCommandInstance();
+		$statusCode = $model->runCaptureYiiOutputLog();
+		if ($statusCode > 0)
+			Yii::app()->user->setFlash('error', "Job ran but returned error status code {$statusCode}");
+		else
+			Yii::app()->user->setFlash('success', "Job successfully ran check output logs");
+		$this->render('view',array(
+				'model'=>$this->loadModel($id),
+		));
+	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
@@ -165,17 +183,6 @@ class DefaultController extends Controller
 		return $model;
 	}
 	
-	public function actionViewOutput()
-	{
-		$model=new YiiJobsOutput('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['YiiJobsOutput']))
-			$model->attributes=$_GET['YiiJobsOutput'];
-		$this->render('adminYiiJobsOutput',array(
-				'model'=>$model,
-		));
-	}
-
 	/**
 	 * Performs the AJAX validation.
 	 * @param YiiJobs $model the model to be validated
