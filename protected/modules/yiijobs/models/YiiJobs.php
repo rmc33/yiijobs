@@ -1,17 +1,4 @@
 <?php
-
-/**
- * This is the model class for table "yiiJobs".
- *
- * The followings are the available columns in table 'yiiJobs':
- * @property integer $yiiJobs_id
- * @property string $name
- * @property string $command_classname
- * @property string $active_flag
- * @property string $last_ran
- * @property string $dc
- * @property string $command_args
- */
 class YiiJobs extends BaseYiiJobs
 {
 	private $_yiijobCommand;
@@ -23,7 +10,7 @@ class YiiJobs extends BaseYiiJobs
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-				'outputs'=>array(self::HAS_MANY, 'YiiJobsOutput', 'YiiJobs_id'),
+				'outputs'=>array(self::HAS_MANY, 'YiiJobsOutput', 'yiiJobs_id'),
 		);
 	}
 	
@@ -70,6 +57,15 @@ class YiiJobs extends BaseYiiJobs
 	public function shouldJobRun()
 	{
 		$this->createJobCommandInstance();
+		if ($this->cron_expression)
+		{
+			$cron = Cron\CronExpression::factory($this->cron_expression);
+			if ($cron->isDue())
+			{
+				return $this->_yiijobCommand->shouldJobRun(time(),$this);
+			}
+			return false;
+		}
 		return $this->_yiijobCommand->shouldJobRun(time(),$this);
 	}
 	
@@ -142,5 +138,15 @@ class YiiJobs extends BaseYiiJobs
 		}
 		$this->save();
 		return $statusCode;
+	}
+	
+	public function getNextCronRun()
+	{
+		if ($this->cron_expression)
+		{
+			$cron = Cron\CronExpression::factory($this->cron_expression);
+			return $cron->getNextRunDate()->format('Y:m:d H:i:s');
+		}
+		return '';
 	}
 }

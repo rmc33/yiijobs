@@ -47,6 +47,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'columns'=>array(
 		'yiiJobs_id',
 		'name',
+		'application_id',
 		'description',
 		'command_classname',
 		'command_args',

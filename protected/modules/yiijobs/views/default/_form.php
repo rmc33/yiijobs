@@ -3,7 +3,54 @@
 /* @var $model YiiJobs */
 /* @var $form CActiveForm */
 ?>
+<?php Yii::app()->clientScript->registerCoreScript('jquery'); ?>
 
+<style>
+.box {
+width: 150px;
+float: left;
+}
+
+.clearfix {
+  overflow: auto;
+  zoom: 1;
+  clear:both;
+}
+
+</style>
+
+<script>
+$(document).ready(function () {
+	$('#generateCron').on('click', function (event) {
+		var minute, hour, day, month, weekday;
+		minute	= getSelection('minute');
+		hour	= getSelection('hour');
+		day		= getSelection('day');
+		month	= getSelection('month');
+		weekday	= getSelection('weekday');
+		$("#YiiJobs_cron_expression").val(minute + "\t" + hour + "\t" + day + "\t" + month + "\t" + weekday);
+	});
+	
+	function getSelection(name) {
+		var chosen;
+		console.log("#" + name + "_chooser_every" + ' is checked?' + $("#" + name + "_chooser_every:checked").length);
+		if($("#" + name + "_chooser_every:checked").length) {
+			chosen = '*';
+		} else {
+			var all_selected = [];
+			$("#" + name+ " option:selected").each(function() {
+				console.log('selected option');
+				all_selected.push($(this).attr('value'));
+			});
+			if(all_selected.length)
+				chosen = all_selected.join(",");
+			else
+				chosen = '*';
+		}
+		return chosen;
+	}
+});
+</script>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -74,256 +121,202 @@
 	</div>
 	
 	<div class="row">
+        <?php echo $form->labelEx($model,'application_id'); ?>
+        <?php echo $form->dropDownList($model, 'application_id', $model->getApplicationIds()); ?>
+        <?php echo $form->error($model,'application_id'); ?>
+    </div>
+	
+	<div class="row">
+		<?php echo $form->labelEx($model,'cron_expression'); ?>
+		<?php echo $form->textField($model,'cron_expression'); ?>
+		<?php echo $form->error($model,'cron_expression'); ?>
 		<input type="button" onclick="$('#cron-gen').toggle();" value="...">
+		<?php if ($model->cron_expression) { ?>
+		<?php echo "Next Run: ".$model->getNextCronRun(); ?>
+		<?php } ?>
 	</div>
 	
 	
 	<div class="row" id="cron-gen" style="display:none">
-		<table class="generator">
-    <tbody>
-        <tr>
-            <td>
-                <table class="generatorBlock">
-                    <tbody>
-                        <tr>
-                            <th colspan="2">Minutes</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="radio" for="everyMinute"><input id="everyMinute" type="radio" value="*" name="minutes">
-                                Every Minute</label>
-                                <label class="radio" for="everyEvenMinute"><input id="everyEvenMinute" type="radio" value="*/2" name="minutes">
-                                Even Minutes</label>
-                                <label class="radio" for="everyOddMinute"><input id="everyOddMinute" type="radio" value="1-59/2" name="minutes">
-                                Odd Minutes</label>
-                                <label class="radio" for="every5Minute"><input id="every5Minute" type="radio" value="*/5" name="minutes">
-                                Every 5 Minutes</label>
-                                <label class="radio" for="every15Minute"><input id="every15Minute" type="radio" value="*/15" name="minutes">
-                                Every 15 Minutes</label>
-                                <label class="radio" for="every30Minute"><input id="every30Minute" type="radio" value="*/30" name="minutes">
-                                Every 30 Minutes</label>
-                            </td>
-                            
-                            <td>
-                                <table class="multipleEntries">
-                                    <tbody>
-                                        <tr> 
-                                            <td>
-                                                <input type="radio" checked="checked" value="select" name="minutes">
-                                            </td>
-                                            <td>
-                                                <select multiple="" size="10" name="selectMinutes[]">
-                                                <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>                                                </select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>        
-            <td>
-                <table class="generatorBlock">
-                    <tbody>
-                        <tr>
-                            <th colspan="2">Hours</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="radio" for="everyHour"><input id="everyHour" type="radio" value="*" name="hours">
-                                Every Hour</label>
-                                <label class="radio" for="everyEvenHour"><input id="everyEvenHour" type="radio" value="*/2" name="hours">
-                                Even Hours</label>
-                                <label class="radio" for="everyOddHour"><input id="everyOddHour" type="radio" value="1-23/2" name="hours">
-                                Odd Hours</label>
-                                <label class="radio" for="every6Hours"><input id="every6Hours" type="radio" value="*/6" name="hours">
-                                Every 6 Hours</label>
-                                <label class="radio" for="every12Hours"><input id="every12Hours" type="radio" value="*/12" name="hours">
-                                Every 12 Hours</label>
-                            </td>
-                            <td>
-                                <table class="multipleEntries">
-                                    <tbody>
-                                        <tr> 
-                                            <td> 
-                                                <input type="radio" checked="checked" value="select" name="hours">
-                                            </td>
-                                            <td>
-                                                <select multiple="" size="10" name="selectHours[]">
-                                                <option value="0">Midnight</option>
-                                                <option value="1">1am</option>
-                                                <option value="2">2am</option>
-                                                <option value="3">3am</option>
-                                                <option value="4">4am</option>
-                                                <option value="5">5am</option>
-                                                <option value="6">6am</option>
-                                                <option value="7">7am</option>
-                                                <option value="8">8am</option>
-                                                <option value="9">9am</option>
-                                                <option value="10">10am</option>
-                                                <option value="11">11am</option>
-                                                <option value="12">Noon</option>
-                                                <option value="13">1pm</option>
-                                                <option value="14">2pm</option>
-                                                <option value="15">3pm</option>
-                                                <option value="16">4pm</option>
-                                                <option value="17">5pm</option>
-                                                <option value="18">6pm</option>
-                                                <option value="19">7pm</option>
-                                                <option value="20">8pm</option>
-                                                <option value="21">9pm</option>
-                                                <option value="22">10pm</option>
-                                                <option value="23">11pm</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table class="generatorBlock">
-                    <tbody>
-                        <tr>
-                            <th colspan="2">Days</th>
-                        </tr>
-                        <tr>
-                            <td> 
-                                <label class="radio" for="everyday"><input id="everyday" type="radio" checked="checked" value="*" name="days">
-                              Every Day</label>
-                                <label class="radio" for="everyEvenDay"><input id="everyEvenDay" type="radio" value="*/2" name="days">
-                              Even Days</label>
-                                <label class="radio" for="everyOddDay"><input id="everyOddDay" type="radio" value="1-31/2" name="days">
-                              Odd Days</label>
-                              <label class="radio" for="every5Days"><input id="every5Days" type="radio" value="*/5" name="days">
-                              Every 5 Days</label>
-                              <label class="radio" for="every5Days"><input id="every5Days" type="radio" value="*/10" name="days">
-                              Every 10 Days</label>                              
-                                <label class="radio" for="every15Days"><input id="every15Days" type="radio" value="*/15" name="days">
-                              Every Half Month</label>
-                            </td>
-                            <td> 
-                                <table class="multipleEntries">                        
-                                    <tbody>
-                                        <tr> 
-                                            <td> 
-                                                <input type="radio" value="select" name="days">
-                                            </td>
-                                            <td> 
-                                                <select multiple="" size="10" name="selectDays[]">
-                                                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option>                                                </select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>                        
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>        
-        <tr>
-            <td>
-                <table class="generatorBlock">
-                    <tbody>
-                        <tr>
-                            <th colspan="2">Months</th>
-                        </tr>
-                        <tr>                        
-                            <td>                        
-                                 <label class="radio" for="everyMonth"><input id="everyMonth" type="radio" checked="checked" value="*" name="months">    
-                                 Every Month</label>
-                                 <label class="radio" for="everyEvenMonths"><input id="everyEvenMonths" type="radio" value="*/2" name="months">
-                                 Even Months</label>
-                                 <label class="radio" for="everyOddMonths"><input id="everyOddMonths" type="radio" value="1-11/2" name="months">
-                                 Odd Months</label>
-                                 <label class="radio" for="every4Months"><input id="every4Months" type="radio" value="*/4" name="months">
-                                 Every 4 Months</label>
-                                 <label class="radio" for="every6Months"><input id="every6Months" type="radio" value="*/6" name="months">
-                                 Every Half Year</label>
-                            </td>
-                            <td>
-                                <table class="multipleEntries">
-                                    <tbody>
-                                        <tr>                            
-                                            <td> 
-                                              <input type="radio" value="select" name="months">
-                                            </td>
-                                            <td> 
-                                                <select multiple="" size="10" name="selectMonths[]" class="cron">
-                                                <option value="1">Jan</option>
-                                                <option value="2">Feb</option>
-                                                <option value="3">Mar</option>
-                                                <option value="4">Apr</option>
-                                                <option value="5">May</option>
-                                                <option value="6">Jun</option>
-                                                <option value="7">Jul</option>
-                                                <option value="8">Aug</option>
-                                                <option value="9">Sep</option>
-                                                <option value="10">Oct</option>
-                                                <option value="11">Nov</option>
-                                                <option value="12">Dec</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table class="generatorBlock">
-                    <tbody>
-                        <tr>
-                            <th colspan="2">Weekday</th>
-                        </tr>
-                        <tr>                        
-                            <td>
-                                <label class="radio" for="everyWeekday"><input id="everyWeekday" name="weekdays" value="*" checked="checked" type="radio">
-                                Every Weekday</label>
-                                <label class="radio" for="everyNonWeekenDays"><input id="everyNonWeekenDays" name="weekdays" value="1-5" type="radio">
-                                Monday-Friday</label>                       
-                                <label class="radio" for="everyWeekenDays"><input id="everyWeekenDays" name="weekdays" value="0,6" type="radio">
-                                Weekend Days</label>
-                            </td>
-                            <td>
-                                <table class="multipleEntries">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <input type="radio" value="select" name="weekdays">
-                                            </td>
-                                            <td>
-                                                <select multiple="" size="10" name="selectWeekdays[]">
-                                                <option value="0">Sun</option>
-                                                <option value="1">Mon</option>
-                                                <option value="2">Tue</option>
-                                                <option value="3">Wed</option>
-                                                <option value="4">Thu</option>
-                                                <option value="5">Fri</option>
-                                                <option value="6">Sat</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>                   
-        </tr>
-    </tbody>
-</table>
+<div class="box">
+<h3>Minute</h3>
+<label for="minute_chooser_every">Every Minute</label>
+<input type="radio" name="minute_chooser" id="minute_chooser_every" class="chooser" value="0" checked="checked"><br>
+
+<label for="minute_chooser_choose">Choose</label>
+<input type="radio" name="minute_chooser" id="minute_chooser_choose" class="chooser" value="1"><br>
+
+
+<select name="minute" id="minute" multiple="multiple" >
+<option value="0">0</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+<option value="32">32</option>
+<option value="33">33</option>
+<option value="34">34</option>
+<option value="35">35</option>
+<option value="36">36</option>
+<option value="37">37</option>
+<option value="38">38</option>
+<option value="39">39</option>
+<option value="40">40</option>
+<option value="41">41</option>
+<option value="42">42</option>
+<option value="43">43</option>
+<option value="44">44</option>
+<option value="45">45</option>
+<option value="46">46</option>
+<option value="47">47</option>
+<option value="48">48</option>
+<option value="49">49</option>
+<option value="50">50</option>
+<option value="51">51</option>
+<option value="52">52</option>
+<option value="53">53</option>
+<option value="54">54</option>
+<option value="55">55</option>
+<option value="56">56</option>
+<option value="57">57</option>
+<option value="58">58</option>
+<option value="59">59</option>
+</select>
+</div>
+
+<div class="box">
+<h3>Hour</h3>
+<label for="hour_chooser_every">Every Hour</label>
+<input type="radio" name="hour_chooser" id="hour_chooser_every" class="chooser" value="0" checked="checked"><br>
+
+<label for="hour_chooser_choose">Choose</label>
+<input type="radio" name="hour_chooser" id="hour_chooser_choose" class="chooser" value="1"><br>
+
+<select name="hour" id="hour" multiple="multiple" >
+<option value="0">12 Midnight</option>
+<option value="1">1 AM</option><option value="2">2 AM</option><option value="3">3 AM</option><option value="4">4 AM</option><option value="5">5 AM</option><option value="6">6 AM</option><option value="7">7 AM</option><option value="8">8 AM</option><option value="9">9 AM</option><option value="10">10 AM</option><option value="11">11 AM</option><option value="12">12 Noon</option>
+<option value="13">1 PM</option><option value="14">2 PM</option><option value="15">3 PM</option><option value="16">4 PM</option><option value="17">5 PM</option><option value="18">6 PM</option><option value="19">7 PM</option><option value="20">8 PM</option><option value="21">9 PM</option><option value="22">10 PM</option><option value="23">11 PM</option></select>
+</div>
+
+<div class="box">
+<h3>Day</h3>
+<label for="day_chooser_every">Every Day</label>
+<input type="radio" name="day_chooser" id="day_chooser_every" class="chooser" value="0" checked="checked"><br>
+
+<label for="day_chooser_choose">Choose</label>
+<input type="radio" name="day_chooser" id="day_chooser_choose" class="chooser" value="1"><br>
+
+<select name="day" id="day" multiple="multiple" >
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+</select>
+</div>
+
+<div class="box">
+<h3>Month</h3>
+<label for="month_chooser_every">Every Month</label>
+<input type="radio" name="month_chooser" id="month_chooser_every" class="chooser" value="0" checked="checked"><br>
+
+<label for="month_chooser_choose">Choose</label>
+<input type="radio" name="month_chooser" id="month_chooser_choose" class="chooser" value="1"><br>
+
+<select name="month" id="month" multiple="multiple" >
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option value="7">July</option>
+<option value="8">Augest</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+</div>
+
+<div class="box">
+<h3>Weekday</h3>
+<label for="weekday_chooser_every">Every Weekday</label>
+<input type="radio" name="weekday_chooser" id="weekday_chooser_every" class="chooser" value="0" checked="checked"><br>
+
+<label for="weekday_chooser_choose">Choose</label>
+<input type="radio" name="weekday_chooser" id="weekday_chooser_choose" class="chooser" value="1"><br>
+
+<select name="weekday" id="weekday" multiple="multiple" >
+<option value="0">Sunday</option>
+<option value="1">Monday</option>
+<option value="2">Tuesday</option>
+<option value="3">Wednesday</option>
+<option value="4">Thursday</option>
+<option value="5">Friday</option>
+<option value="6">Saturday</option>
+</select>
+</div>
+<div class="box">
+	<input type="button" value="OK" id="generateCron"/>
+</div>
 	</div>
 
-	<div class="row buttons">
+	<div class="row buttons clearfix">
+	<br/>
+	<br/>
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 		<?php if (!$model->isNewRecord) echo CHtml::submitButton('Test', array('name' => 'test'));?>
 	</div>

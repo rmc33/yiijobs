@@ -23,6 +23,7 @@ $this->menu=array(
 	'attributes'=>array(
 		'yiiJobs_id',
 		'name',
+		'application_id',
 		'description',
 		'command_classname',
 		'command_args',
@@ -31,9 +32,13 @@ $this->menu=array(
 		'dc',
 		'last_ran',
 		'last_completed',
+		'cron_expression'
 	),
 )); ?>
-
+<?php if ($model->cron_expression) {?>
+<b>Next Run:</b><?php echo $model->getNextCronRun();?>
+</br>
+<?php } ?>
 <b>View Output:</b>
 <a href="<?php echo "viewOutput?YiiJobsOutput%5ByiiJobsOutput_id%5D=&YiiJobsOutput%5ByiiJobs_id%5D={$model->yiiJobs_id}&YiiJobsOutput%5Bis_error%5D=&YiiJobsOutput%5Boutput%5D=&YiiJobsOutput%5Bstart_time%5D=&YiiJobsOutput%5Bend_time%5D=&YiiJobsOutput_page=1&ajax=yii-jobs-grid&id=3";?>">output logs</a>
 <br />

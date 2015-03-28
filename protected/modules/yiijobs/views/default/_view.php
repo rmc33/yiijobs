@@ -12,6 +12,10 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('name')); ?>:</b>
 	<?php echo CHtml::encode($data->name); ?>
 	<br />
+	
+	<b><?php echo CHtml::encode($data->getAttributeLabel('application_id')); ?>:</b>
+	<?php echo CHtml::encode($data->getApplicationNameForId($data->application_id)); ?>
+	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
 	<?php echo CHtml::encode($data->description); ?>

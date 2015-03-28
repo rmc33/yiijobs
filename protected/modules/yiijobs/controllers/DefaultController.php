@@ -33,17 +33,14 @@ class DefaultController extends Controller
 	 */
 	public function accessRules()
 	{
+		$arr = array();
+		if (Yii::app()->user->getState('roles') == 'devwerp')
+		{
+			$arr = array('index','view','create','update','viewOutput','admin','delete','test');
+		}
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','test'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>$arr,
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -160,9 +157,9 @@ class DefaultController extends Controller
 		$model->createJobCommandInstance();
 		$statusCode = $model->runCaptureYiiOutputLog();
 		if ($statusCode > 0)
-			Yii::app()->user->setFlash('error', "Job ran but returned error status code {$statusCode}");
+			Yii::app()->user->setFlash('error', "Job ran but returned error exit status code {$statusCode}");
 		else
-			Yii::app()->user->setFlash('success', "Job successfully ran check output logs");
+			Yii::app()->user->setFlash('success', "Job completed check output logs");
 		$this->render('view',array(
 				'model'=>$this->loadModel($id),
 		));
@@ -181,6 +178,17 @@ class DefaultController extends Controller
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
+	}
+	
+	public function actionViewOutput()
+	{
+		$model=new YiiJobsOutput('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['YiiJobsOutput']))
+			$model->attributes=$_GET['YiiJobsOutput'];
+		$this->render('adminYiiJobsOutput',array(
+				'model'=>$model,
+		));
 	}
 	
 	/**
