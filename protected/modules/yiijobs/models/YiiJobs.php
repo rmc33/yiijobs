@@ -149,4 +149,17 @@ class YiiJobs extends BaseYiiJobs
 		}
 		return '';
 	}
+	
+	public function hasRanSuccessfullyToday()
+	{
+		$start_time = date('Y-m-d 00:00:00');
+		$data = Yii::app()->db->createCommand()->select('is_error')
+			->from('yiiJobsOutput')
+			->where('yiiJobs_id=:id and start_time >= :start_time and is_error=0', array(':id'=>$this->yiiJobs_id, ':start_time'=>$start_time))
+			->queryScalar();
+		
+		if ($data) return true;
+		
+		return false;
+	}
 }
