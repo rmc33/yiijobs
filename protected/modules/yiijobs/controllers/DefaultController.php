@@ -49,17 +49,17 @@ class DefaultController extends Controller
 		);
 	}
 	
-	public function redirect($url,$terminate=true,$statusCode=302)
+	public function createUrl($route,$params=array(),$ampersand='&')
 	{
-		if(is_array($url))
-		{
-			$route=isset($url[0]) ? $url[0] : '';
-			$url=$this->createUrl($route,array_splice($url,1));
-		}
-	
-		$url = $this->http.'://'.$_SERVER['HTTP_HOST'].'/'.$url;
-		Yii::app()->getRequest()->redirect($url,$terminate,$statusCode);
+		if($route==='')
+			$route=$this->getId().'/'.$this->getAction()->getId();
+		elseif(strpos($route,'/')===false)
+		$route=$this->getId().'/'.$route;
+		if($route[0]!=='/' && ($module=$this->getModule())!==null)
+			$route=$module->getId().'/'.$route;
+		return $this->http.'://'.$_SERVER['HTTP_HOST'].'/'.Yii::app()->createUrl(trim($route,'/'),$params,$ampersand);
 	}
+	
 
 	/**
 	 * Displays a particular model.
