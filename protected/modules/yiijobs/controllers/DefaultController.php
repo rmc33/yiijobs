@@ -48,6 +48,18 @@ class DefaultController extends Controller
 			),
 		);
 	}
+	
+	public function redirect($url,$terminate=true,$statusCode=302)
+	{
+		if(is_array($url))
+		{
+			$route=isset($url[0]) ? $url[0] : '';
+			$url=$this->createUrl($route,array_splice($url,1));
+		}
+	
+		$url = $this->http.'://'.$_SERVER['HTTP_HOST'].'/'.$url;
+		Yii::app()->getRequest()->redirect($url,$terminate,$statusCode);
+	}
 
 	/**
 	 * Displays a particular model.
