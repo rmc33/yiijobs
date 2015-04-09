@@ -1,7 +1,7 @@
 CREATE TABLE `yiiJobs` (
   `yiiJobs_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
-  `description`  varchar(245) DEFAULT NULL,
+  `description` varchar(245) DEFAULT NULL,
   `command_classname` varchar(100) DEFAULT NULL,
   `command_args` varchar(145) DEFAULT NULL,
   `active_flag` tinyint(1) DEFAULT NULL,
@@ -9,8 +9,12 @@ CREATE TABLE `yiiJobs` (
   `dc` datetime DEFAULT NULL,
   `last_ran` datetime DEFAULT NULL,
   `last_completed` datetime DEFAULT NULL,
+  `application_id` int(11) DEFAULT NULL,
+  `mpt_id` int(11) DEFAULT NULL,
+  `progress` int(11) DEFAULT NULL,
+  `cron_expression` varchar(360) DEFAULT NULL,
   PRIMARY KEY (`yiiJobs_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1
 
 CREATE TABLE `yiiJobsOutput` (
   `yiiJobsOutput_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -19,7 +23,5 @@ CREATE TABLE `yiiJobsOutput` (
   `yiiJobs_id` int(11) DEFAULT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`yiiJobsOutput_id`),
-  KEY `fk_yiiJobsOutput_yiiJobs_id_idx` (`yiiJobs_id`),
-  CONSTRAINT `fk_yiiJobsOutput_yiiJobs_id` FOREIGN KEY (`yiiJobs_id`) REFERENCES `yiiJobs` (`yiiJobs_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+  PRIMARY KEY (`yiiJobsOutput_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=903 DEFAULT CHARSET=latin1
