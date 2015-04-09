@@ -9,7 +9,8 @@ YiiJobsRunnerCommand will query and loop through active YiiJobs records that are
 Using cron-expression from https://github.com/mtdowling/cron-expression to parse cron expression string and determine if job should run
 
 Add alias for Cron namespace to config/main.php and config/console.php
-
+<pre>
 Yii::setPathOfAlias('Cron', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'common/lib/vendor/mtdowling/cron-expression/src/Cron');
+</pre>
 
 TODO: cache query to get all active YiiJobs to run and update cache only when a YiiJob has been changed or added
