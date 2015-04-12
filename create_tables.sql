@@ -10,11 +10,11 @@ CREATE TABLE `yiiJobs` (
   `last_ran` datetime DEFAULT NULL,
   `last_completed` datetime DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
-  `mpt_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `progress` int(11) DEFAULT NULL,
   `cron_expression` varchar(360) DEFAULT NULL,
   PRIMARY KEY (`yiiJobs_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1
+) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `yiiJobsOutput` (
   `yiiJobsOutput_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -24,4 +24,4 @@ CREATE TABLE `yiiJobsOutput` (
   `start_time` timestamp NULL DEFAULT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`yiiJobsOutput_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=903 DEFAULT CHARSET=latin1
+) ENGINE=InnoDB AUTO_INCREMENT=903 DEFAULT CHARSET=latin1;
