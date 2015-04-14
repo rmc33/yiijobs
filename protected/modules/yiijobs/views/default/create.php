@@ -3,12 +3,11 @@
 /* @var $model YiiJobs */
 
 $this->breadcrumbs=array(
-	'Yii Jobs'=>array('index'),
+	'Yii Jobs'=>array('admin'),
 	'Create',
 );
 
 $this->menu=array(
-	array('label'=>'List YiiJobs', 'url'=>array('index')),
 	array('label'=>'Manage YiiJobs', 'url'=>array('admin')),
 );
 ?>

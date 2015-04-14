@@ -7,6 +7,9 @@ class JobTest2Command extends CConsoleCommand implements YiiJobsConsoleCommand
 	//run every 15 min after last ran
 	public function shouldJobRun($current_timestamp, $job)
 	{
+		
+		if ($job->hasRanSuccessfullyToday()) return false;
+		
 		$lastRan = new DateTime($job->last_ran);
 		if (!$lastRan) return true;
 		
@@ -31,6 +34,6 @@ class JobTest2Command extends CConsoleCommand implements YiiJobsConsoleCommand
 	public function actionInit()
 	{
 		echo 'running Test2 init';
-		return 1;
+		return 0;
 	}
 }

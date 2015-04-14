@@ -15,7 +15,7 @@
  * @property string $last_ran
  * @property string $last_completed
  * @property integer $application_id
- * @property integer $mpt_id
+ * @property integer $user_id
  * @property integer $progress
  * @property string $cron_expression
  */
@@ -37,7 +37,7 @@ class BaseYiiJobs extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('active_flag, is_running, application_id, mpt_id, progress', 'numerical', 'integerOnly'=>true),
+            array('active_flag, is_running, application_id, user_id, progress', 'numerical', 'integerOnly'=>true),
             array('name, command_classname', 'length', 'max'=>100),
             array('description', 'length', 'max'=>245),
             array('command_args', 'length', 'max'=>145),
@@ -45,7 +45,7 @@ class BaseYiiJobs extends CActiveRecord
             array('dc, last_ran, last_completed', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('yiiJobs_id, name, description, command_classname, command_args, active_flag, is_running, dc, last_ran, last_completed, application_id, mpt_id, progress, cron_expression', 'safe', 'on'=>'search'),
+            array('yiiJobs_id, name, description, command_classname, command_args, active_flag, is_running, dc, last_ran, last_completed, application_id, user_id, progress, cron_expression', 'safe', 'on'=>'search'),
         );
     }
 
@@ -77,7 +77,7 @@ class BaseYiiJobs extends CActiveRecord
             'last_ran' => 'Last Ran',
             'last_completed' => 'Last Completed',
             'application_id' => 'Application',
-            'mpt_id' => 'Mpt',
+            'user_id' => 'Mpt',
             'progress' => 'Progress',
             'cron_expression' => 'Cron Expression',
         );
@@ -112,7 +112,7 @@ class BaseYiiJobs extends CActiveRecord
         $criteria->compare('last_ran',$this->last_ran,true);
         $criteria->compare('last_completed',$this->last_completed,true);
         $criteria->compare('application_id',$this->application_id);
-        $criteria->compare('mpt_id',$this->mpt_id);
+        $criteria->compare('user_id',$this->user_id);
         $criteria->compare('progress',$this->progress);
         $criteria->compare('cron_expression',$this->cron_expression,true);
 

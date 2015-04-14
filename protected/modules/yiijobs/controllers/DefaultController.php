@@ -7,6 +7,8 @@ class DefaultController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout;
+	//can be set to either http or https
+	public $http = "http";
 
 	public function init()
 	{
@@ -33,17 +35,13 @@ class DefaultController extends Controller
 	 */
 	public function accessRules()
 	{
-		$arr = array();
-		if (Yii::app()->user->getState('roles') == 'devwerp')
-		{
-			$arr = array('index','view','create','update','viewOutput','admin','delete','test');
-		}
+
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>$arr,
-				'users'=>array('@'),
+				'actions'=> array('index','view','create','update','viewOutput','admin','delete','test'),
+				'users'=>array('*'),
 			),
-			array('deny',  // deny all users
+			array('allow',  // deny all users
 				'users'=>array('*'),
 			),
 		);
@@ -57,7 +55,7 @@ class DefaultController extends Controller
 		$route=$this->getId().'/'.$route;
 		if($route[0]!=='/' && ($module=$this->getModule())!==null)
 			$route=$module->getId().'/'.$route;
-		return $this->http.'://'.$_SERVER['HTTP_HOST'].'/'.Yii::app()->createUrl(trim($route,'/'),$params,$ampersand);
+		return $this->http.'://'.$_SERVER['HTTP_HOST'].Yii::app()->createUrl(trim($route,'/'),$params,$ampersand);
 	}
 	
 
@@ -157,6 +155,8 @@ class DefaultController extends Controller
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['YiiJobs']))
 			$model->attributes=$_GET['YiiJobs'];
+		if (!isset($_GET['YiiJobs']['active_flag']))
+			$model->active_flag = 1;
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -166,12 +166,19 @@ class DefaultController extends Controller
 	public function actionTest($id)
 	{
 		$model=YiiJobs::model()->findByPk($id);
-		$model->createJobCommandInstance();
-		$statusCode = $model->runCaptureYiiOutputLog();
-		if ($statusCode > 0)
-			Yii::app()->user->setFlash('error', "Job ran but returned error exit status code {$statusCode}");
-		else
-			Yii::app()->user->setFlash('success', "Job completed check output logs");
+		if (is_object($model))
+		{
+			$model->createJobCommandInstance();
+			$statusCode = $model->runCaptureYiiOutputLog();
+			if ($statusCode > 0)
+				Yii::app()->user->setFlash('error', "Job ran but returned error exit status code {$statusCode}");
+			else
+				Yii::app()->user->setFlash('success', "Job completed check output logs");
+		}
+		else 
+		{
+			Yii::app()->user->setFlash('error', "Job not found with id $id");
+		}
 		$this->render('view',array(
 				'model'=>$this->loadModel($id),
 		));

@@ -3,12 +3,11 @@
 /* @var $model YiiJobs */
 
 $this->breadcrumbs=array(
-	'Yii Jobs'=>array('index'),
+	'Yii Jobs'=>array('admin'),
 	$model->name,
 );
 
 $this->menu=array(
-	array('label'=>'List YiiJobs', 'url'=>array('index')),
 	array('label'=>'Create YiiJobs', 'url'=>array('create')),
 	array('label'=>'Update YiiJobs', 'url'=>array('update', 'id'=>$model->yiiJobs_id)),
 	array('label'=>'Delete YiiJobs', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->yiiJobs_id),'confirm'=>'Are you sure you want to delete this item?')),
@@ -40,5 +39,5 @@ $this->menu=array(
 </br>
 <?php } ?>
 <b>View Output:</b>
-<a href="<?php echo "viewOutput?YiiJobsOutput%5ByiiJobsOutput_id%5D=&YiiJobsOutput%5ByiiJobs_id%5D={$model->yiiJobs_id}&YiiJobsOutput%5Bis_error%5D=&YiiJobsOutput%5Boutput%5D=&YiiJobsOutput%5Bstart_time%5D=&YiiJobsOutput%5Bend_time%5D=&YiiJobsOutput_page=1&ajax=yii-jobs-grid&id=3";?>">output logs</a>
+<a href="<?php echo $this->createUrl("viewOutput?YiiJobsOutput%5ByiiJobsOutput_id%5D=&YiiJobsOutput%5ByiiJobs_id%5D={$model->yiiJobs_id}&YiiJobsOutput%5Bis_error%5D=&YiiJobsOutput%5Boutput%5D=&YiiJobsOutput%5Bstart_time%5D=&YiiJobsOutput%5Bend_time%5D=&YiiJobsOutput_page=1&ajax=yii-jobs-grid&id=3");?>">output logs</a>
 <br />

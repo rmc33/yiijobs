@@ -93,14 +93,14 @@ class YiiJobs extends BaseYiiJobs
 	public function setIsRunning()
 	{
 		$last_ran = date('Y-m-d H:i:s');
-		return db()->createCommand()->update('yiiJobs', array('is_running' => 1, 'last_ran' => $last_ran),
+		return Yii::app()->db->createCommand()->update('yiiJobs', array('is_running' => 1, 'last_ran' => $last_ran),
 				'yiiJobs_id=:id',
 				array(':id'=>$this->yiiJobs_id));
 	}
 	
 	public function getApplicationIds()
 	{
-		return array('1' => 'main site', '2' => 'inp', '3' => 'api', '4' => 'admin');
+		return array('1' => 'main site', '2' => 'api', '3' => 'admin');
 	}
 	
 	public function getApplicationNameForId($id)
@@ -136,6 +136,7 @@ class YiiJobs extends BaseYiiJobs
 		{
 			$this->active_flag = 0;
 		}
+		$this->is_running = 0;
 		$this->save();
 		return $statusCode;
 	}
@@ -161,5 +162,36 @@ class YiiJobs extends BaseYiiJobs
 		if ($data) return true;
 		
 		return false;
+	}
+	
+	public function afterSave()
+	{
+		//update jobs json cache
+		$jobs = self::model()->findAllByAttributes(array('active_flag' => 1));
+		file_put_contents(Yii::app()->basePath."/yiiJobsCache.json", CJSON::encode($jobs));
+		return parent::afterSave();
+	}
+	
+	public static function getActiveJobsNotRunning()
+	{
+		$jobs = CJSON::decode(file_get_contents(Yii::app()->basePath."/yiiJobsCache.json"));
+		
+		$activeJobs = array();
+		if (is_array($jobs))
+		{
+			foreach($jobs as $job)
+			{
+				if (!$job['is_running'])
+				{
+					$newJob = new YiiJobs();
+					$newJob->attributes = $job;
+					$newJob->yiiJobs_id = $job['yiiJobs_id'];
+					$newJob->setIsNewRecord(false);
+					$activeJobs[] = $newJob;
+				}
+			}
+			return $activeJobs;
+		}
+		return self::model()->findAllByAttributes(array('active_flag' => 1, 'is_running' => 0));
 	}
 }

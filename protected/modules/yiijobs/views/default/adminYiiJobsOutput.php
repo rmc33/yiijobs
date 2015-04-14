@@ -3,12 +3,12 @@
 /* @var $model YiiJobs */
 
 $this->breadcrumbs=array(
-	'Yii Jobs'=>array('index'),
+	'Yii Jobs'=>array('admin'),
 	'Manage',
 );
 
 $this->menu=array(
-	array('label'=>'List YiiJobs', 'url'=>array('index')),
+	array('label'=>'Manage YiiJobs', 'url'=>array('admin')),
 	array('label'=>'Create YiiJobs', 'url'=>array('create')),
 );
 
@@ -44,6 +44,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'id'=>'yii-jobs-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
+	'pager'=>array('class'=>'CLinkPager'),
 	'columns'=>array(
 		'yiiJobsOutput_id',
 		'yiiJobs_id',
