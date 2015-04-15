@@ -10,5 +10,10 @@
     ],
     "support": {
         "issues": "https://github.com/rmc33/yiijobs/issues"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.3.x-dev"
+        }
     }
 }
