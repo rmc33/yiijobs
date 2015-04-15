@@ -5,13 +5,12 @@
     "authors": [
         {
             "name": "Ryan Conigliaro",
-            "email": "rmconigliaro@gmail.com",
+            "email": "rmconigliaro@gmail.com"
         }
     ],
     "support": {
         "issues": "https://github.com/rmc33/yiijobs/issues"
     },
-
     "require": {
         "yiisoft/yii"           : ">=1.1.9"
     }
