@@ -164,34 +164,8 @@ class YiiJobs extends BaseYiiJobs
 		return false;
 	}
 	
-	public function afterSave()
-	{
-		//update jobs json cache
-		$jobs = self::model()->findAllByAttributes(array('active_flag' => 1));
-		file_put_contents(Yii::app()->basePath."/yiiJobsCache.json", CJSON::encode($jobs));
-		return parent::afterSave();
-	}
-	
 	public static function getActiveJobsNotRunning()
 	{
-		$jobs = CJSON::decode(file_get_contents(Yii::app()->basePath."/yiiJobsCache.json"));
-		
-		$activeJobs = array();
-		if (is_array($jobs))
-		{
-			foreach($jobs as $job)
-			{
-				if (!$job['is_running'])
-				{
-					$newJob = new YiiJobs();
-					$newJob->attributes = $job;
-					$newJob->yiiJobs_id = $job['yiiJobs_id'];
-					$newJob->setIsNewRecord(false);
-					$activeJobs[] = $newJob;
-				}
-			}
-			return $activeJobs;
-		}
 		return self::model()->findAllByAttributes(array('active_flag' => 1, 'is_running' => 0));
 	}
 }
